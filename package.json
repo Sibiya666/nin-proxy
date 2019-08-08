@@ -1,0 +1,20 @@
+{
+  "name": "nin-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "live": "nodemon server.js",
+    "live-client": "nodemon client.js"
+  },
+  "author": "sibiya666",
+  "license": "ISC"
+}
