@@ -3,9 +3,9 @@ const URL = require('../../urls');
 const SONLINESU_HEADERS = require('../../sonline-header');
 
 const registration = (resClient, reqClient) => {
-    const userName = resClient.query.name;
+    const userName = decodeURI(resClient.query.name);
     const userPhone = resClient.query.phone;
-
+    
     axios
         .post(
             URL.CLIENT_REGISTRATION_URL,
@@ -17,9 +17,9 @@ const registration = (resClient, reqClient) => {
         )
         .then(({ data }) => {
             reqClient.send({
-                'X-Device-ID': data.message['X-Device-ID']
+                xDeviceID: data.message['X-Device-ID']
             })
-        })
+        });
 };
 
 module.exports = registration;

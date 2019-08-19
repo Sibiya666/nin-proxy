@@ -10,13 +10,14 @@ const confirm = (resClient, reqClient) => {
 
     const xDeviceId = resClient.query.xDeviceId;
     const userPhone = resClient.query.phone;
+    const code = resClient.query.code;
 
     axios.post(
         URL.CONFIRM_REGISTRATION_URL,
         {
             phone: userPhone,
-            code: code,
-            device: xDeviceId
+            device: xDeviceId,
+            code
         },
         options
     ).then(
