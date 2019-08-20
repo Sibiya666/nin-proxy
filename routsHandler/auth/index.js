@@ -4,8 +4,8 @@ const registration = require('./registration');
 const confirm = require('./confirm');
 const router = express.Router();
 
-router.get('/auth', auth)
-router.post('/reg', registration)
-router.post('/confirm', confirm)
+router.get('/', auth)
+router.get('/reg', registration)
+router.get('/confirm', confirm)
 
 module.exports = router;

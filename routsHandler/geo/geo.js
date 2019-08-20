@@ -7,23 +7,27 @@ const createHttpRequserCity = (url, id) => {
 };
 
 const geoHandler = (clientRes, req) => {
-    const cityName = decodeURI(clientRes.query.city);
+    console.log(`GEO: ${clientRes.query.city}`)
+    console.log(clientRes.query.city)
+    // console.log(decodeURI(clientRes.query.city))
+    req.send({result: clientRes.query.city})
+    // const cityName = decodeURI(clientRes.query.city);
 
-    axios
-        .get('https://api.sonline.su/v1/geo', SONLINESU_HEADERS)
-        .then(({ data }) => {
-            const id = data[0].cities.filter(item => item.title == cityName);
+    // axios
+    //     .get('https://api.sonline.su/v1/geo', SONLINESU_HEADERS)
+    //     .then(({ data }) => {
+    //         const id = data[0].cities.filter(item => item.title == cityName);
             
-            return Promise.all([
-                createHttpRequserCity(URL.SALON_URL, id),
-                createHttpRequserCity(URL.GEO_URL, id)
-            ])
-        })
-        .then(res => {
-            const salon = res[0].data;
-            let metroStation = res[1].data[0].cities[0].metro;
-            req.send(createRequest(metroStation, salon))
-        });
+    //         return Promise.all([
+    //             createHttpRequserCity(URL.SALON_URL, id),
+    //             createHttpRequserCity(URL.GEO_URL, id)
+    //         ])
+    //     })
+    //     .then(res => {
+    //         const salon = res[0].data;
+    //         let metroStation = res[1].data[0].cities[0].metro;
+    //         req.send(createRequest(metroStation, salon))
+    //     });
 };
 
 const createRequest = (metro, salon) => {
