@@ -7,40 +7,52 @@ const createHttpRequserCity = (url, id) => {
 };
 
 const geoHandler = (clientRes, req) => {
-    console.log(`GEO: ${clientRes.query.city}`)
-    console.log(clientRes.query.city)
-    // console.log(decodeURI(clientRes.query.city))
-    req.send({result: clientRes.query.city})
-    // const cityName = decodeURI(clientRes.query.city);
+    const cityName = clientRes.body.city;
 
-    // axios
-    //     .get('https://api.sonline.su/v1/geo', SONLINESU_HEADERS)
-    //     .then(({ data }) => {
-    //         const id = data[0].cities.filter(item => item.title == cityName);
-            
-    //         return Promise.all([
-    //             createHttpRequserCity(URL.SALON_URL, id),
-    //             createHttpRequserCity(URL.GEO_URL, id)
-    //         ])
-    //     })
-    //     .then(res => {
-    //         const salon = res[0].data;
-    //         let metroStation = res[1].data[0].cities[0].metro;
-    //         req.send(createRequest(metroStation, salon))
-    //     });
+    axios
+        .get(URL.GEO_URL, SONLINESU_HEADERS)
+        .then(({ data }) => {
+            const filteredCities = data[0].cities.filter(item => item.title === cityName);
+            const id = filteredCities[0].id;
+
+            return Promise.all([
+                createHttpRequserCity(URL.SALON_URL, id),
+                createHttpRequserCity(URL.GEO_URL, id)
+            ])
+        })
+        .then(res => {
+            const salon = res[0].data;
+            let metroStation = res[1].data[0].cities[0].metro;
+            req.send(createRequest(metroStation, salon))
+        });
 };
 
 const createRequest = (metro, salon) => {
 
-    if (metro) {
-        data = metro.filter(element => salon.find(item =>
+    if (metro && salon.find(item => item.metro)) {
+        const result = metro.filter(element => salon.find(item =>
             item.metro.includes(element.id)
         ));
-        return { screen: 'metro', data }
-    } else {
-        data = salon.filter(item => routId == item.city);
-        return { screen: 'salon', data }
+        return {
+            screen: 'metro',
+            cityId: salon[0].city,
+            result
+        }
     }
+
+    const result = salon
+        .filter(item => salon[0].city == item.city)
+        .reduce((acc, current) => {
+            acc.push(current.title)
+            return acc
+        }, []);
+
+    return {
+        screen: 'salon',
+        cityId: salon[0].city,
+        result
+    }
+
 }
 
 module.exports = geoHandler;

@@ -1,35 +1,37 @@
 const axios = require('axios');
 const URL = require('../../urls');
 const SONLINESU_HEADERS = require('../../sonline-header');
+const USER_ACTIVATED = 200;
 
 const confirm = (resClient, reqClient) => {
+    const { xDeviceId, phone, code } = resClient.body;
+    const options = { ...SONLINESU_HEADERS };
+    options.headers['X-Device-ID'] = xDeviceId;
 
-    const options = {
-        ...SONLINESU_HEADERS,
-    };
+    axios
+        .post(
+            URL.CONFIRM_REGISTRATION_URL,
+            {
+                device: xDeviceId,
+                phone, code
+            },
+            options
+        )
+        .then(
+            ({ data }) => {
 
-    const xDeviceId = resClient.query.xDeviceId;
-    const userPhone = resClient.query.phone;
-    const code = resClient.query.code;
+                if (data.message.code !== USER_ACTIVATED) {
+                    reqClient.send({ result: false });
+                    return
+                }
 
-    axios.post(
-        URL.CONFIRM_REGISTRATION_URL,
-        {
-            phone: userPhone,
-            device: xDeviceId,
-            code
-        },
-        options
-    ).then(
-        ({ data }) => {
-            reqClient.send(
-                {
-                    result: true,
-                    'X-USER-KEY': data.message['X-USER-KEY']
+                reqClient.send({
+                        result: true,
+                        'X-USER-KEY': data.message['X-USER-KEY']
+                    });
 
-                })
-        }
-    );
+            }
+        );
 };
 
 module.exports = confirm;
