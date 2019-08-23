@@ -1,23 +1,27 @@
 const express = require('express');
 const server = express();
 
-const geoHandler = require('./routsHandler/geo/geo');
-const authHandler = require('./routsHandler/auth/index');
-const salonsHandler = require('./routsHandler/salons/index');
-const categoryHandler = require('./routsHandler/category/index');
-const servicesHandler = require('./routsHandler/services/index');
-const priceHandler = require('./routsHandler/price/index');
-const dateHandler = require('./routsHandler/date/index');
+const geo = require('./routs/geo');
+const auth = require('./routs/auth');
+const salons = require('./routs/salons');
+const category = require('./routs/category');
+const services = require('./routs/services');
+const price = require('./routs/price');
+const date = require('./routs/date');
+const time = require('./routs/time');
+const order = require('./routs/order');
 
 server.use(express.json());
-server.use('/auth', authHandler);
+server.use('/auth', auth);
 
-server.post('/geo', geoHandler);
-server.post('/salons', salonsHandler);
-server.post('/category', categoryHandler);
-server.post('/services', servicesHandler);
-server.post('/price', priceHandler);
-server.post('/date', dateHandler);
+server.post('/geo', geo);
+server.post('/salons', salons);
+server.post('/category', category);
+server.post('/services', services);
+server.post('/price', price);
+server.post('/date', date);
+server.post('/time', time);
+server.post('/order', order);
 
 server.listen(3000, () => {})
 

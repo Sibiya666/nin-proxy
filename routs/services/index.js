@@ -9,7 +9,7 @@ const services = async (reqCLient, res) => {
         return acc;
     }, [])
 
-    res.send({ result });
+    res.send({ result, next: true });
 };
 
 module.exports = services;
